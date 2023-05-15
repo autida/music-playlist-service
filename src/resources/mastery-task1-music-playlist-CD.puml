@@ -1,0 +1,136 @@
+PARTICIPANTS: use this file for creating the class diagram in mastery task 01
+
+@startuml
+
+class GetPlaylistActivity {
+- log: Logger
+- playListDao: PlayListDao
++ GetPlaylistActivity
++ handleRequest(GetPlaylistRequest , Context): GetPlaylistResult
+}
+
+class AddSongToPlaylistActivity {
+- log: Logger
+- playlistDao: PlayListDao
+- albumTrackDao: AlbumtrackDao
++ AddSongToPlaylistActivity(PlaylistDao, AlbumTrackDao)
++ handleRequest(AddSongToPlaylistRequest, Context): AddSongToPlaylistResult
+}
+
+class CreatePlaylistActivity {
+- log: Logger
+- playlistDao: PlaylistDao
++ CreatePlaylistActivity(PlaylistDao)
++ handleRequest(CreatePlaylistRequest, Context): CreatePlaylistResult
+ }
+
+class GetPlaylistSongsActivity {
+- log: Logger
+- playlistDao: PlaylistDao
++ GetPlaylistSongsActivity(PlaylistDao)
++ handleRequest(GetPlaylistSongsRequest, Context): GetPlaylistSongsResult
+}
+
+class UpdatePlaylistActivity {
+- log: Logger
+- playlistDao: PlaylistDao
++ UpdatePlaylistActivity(PlayListDao)
++ handleRequest(UpdatePlaylistRequest, Context): UpdatePlaylistResult
+}
+
+class PlaylistDao {
+- dynamoDbMapper : DynamoDBMapper
++ PlaylistDao(DynamoDBMapper)
++ getPlaylist(String): Playlist
+}
+
+class AlbumTrackDao {
+- dynamoDbMapper : DynamoDBMapper
++ AlbumTrackDao(DynamoDbMapper)
+}
+
+class PlaylistNotFoundException {
+- {static} serialVersionUID: long
++ PlaylistNotFoundException()
++ PlaylistNotFoundException(String)
++ PlaylistNotFoundException(Throwable)
++ PlaylistNotFoundException(String, Throwable)
+}
+
+class InvalidAttributeValueException {
+- {static} serialVersionUID: long
++ InvalidAttributeValueException()
++ InvalidAttributeValueException(String)
++ InvalidAttributeValueException(Throwable)
++ InvalidAttributeValueException(String, Throwable)
+}
+
+class AlbumTrackNotFoundException {
+- {static} serialVersionUID: long
++ AlbumTrackNotFoundException()
++ AlbumTrackNotFoundException(String)
++ AlbumTrackNotFoundException(Throwable)
++ AlbumTrackNotFoundException(String, Throwable)
+}
+
+class InvalidAttributeException {
+- {static} serialVersionUID: long
++ InvalidAttributeException()
++ InvalidAttributeException(String)
++ InvalidAttributeException(Throwable)
++ InvalidAttributeException(String, Throwable);
+}
+
+class InvalidAttributeChangeException {
+- {static} serialVersionUID: long
++ InvalidAttributeChangeException()
++ InvalidAttributeChangeException(String)
++ InvalidAttributeException(Throwable)
++ InvalidAttributeException(String, Throwable);
+}
+class Playlist {
+- @DynamoDBHashKey id : String
+- name: String
+- customerId: String
+- songCount: Integer
+- tags: Set<String>
+- songList: List<AlbumTrack>
++ getID(): String
++ setID(String): void
++ getSongList(): List<AlbumTrack>
++ setSongList(List<AlbumTrack>): void
++ getName(): String
++ setName(String): void
++ getCustomerId(): String
++ setCustomerId(String): void
++ getSongCount(): Integer
++ setSongCount(Integer): void
++ getTags(): Set<String>
++ setTags(Set<String>): void
+}
+
+class AlbumTrack{
+- @DynamoDBHashKey asin : String
+- @DynamoDBRangeKey trackNumber : Integer
+- albumName: String
+- songTitle: String
++ getAsin(): String
++ setAsin(String): void
++ getTrack_number(): Integer
++ setTrack_number(Integer): void
++ getAlbum_name(): String
++ setAlbum_name(String): void
++ getSong_title(): String
++ setSong_title(String): void
+}
+
+PlaylistDao --* AddSongToPlaylistActivity
+AlbumTrackDao --* AddSongToPlaylistActivity
+PlaylistDao --* GetPlaylistActivity
+PlaylistDao --* CreatePlaylistActivity
+PlaylistDao --* GetPlaylistSongsActivity
+PlaylistDao --* UpdatePlaylistActivity
+AlbumTrack --* Playlist
+InvalidAttributeException <|-- InvalidAttributeChangeException
+InvalidAttributeException <|-- InvalidAttributeValueException
+@enduml
